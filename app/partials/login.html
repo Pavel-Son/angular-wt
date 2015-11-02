@@ -1,0 +1,35 @@
+<div class="col-sm-12">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4>Login</h4>
+			<div class="error" ng-show="userStatus">
+				<p class="text-danger" ng-show="!userStatus.userExist">
+					User Not Found
+				</p>
+				<p class="text-danger" ng-show="!userStatus.passwordMatch">
+					Invalid Password
+				</p>
+			</div>
+			<hr>
+			
+			<div ng-hide="loggedInUser()">
+				<!-- <form action="" class="form" method="POST"> -->
+				<div class="form-group">
+					<input type="text" placeholder="username" ng-model="login.userName" name="userName" required class="form-control"/>
+				</div>
+				<div class="form-group">
+					<div class="input-group password-input-group">
+						<span class="input-group-addon" ng-click="togglePassVisibility()"><span class="glyphicon glyphicon-eye-close"></span></span>
+						<input type="password" id="pass" placeholder="password" ng-model="login.password" name="password" required class="form-control"/>
+					</div>
+				</div>
+				<button class="btn btn-success" ng-click="logInUser()">Login</button>
+				<!-- </form> -->
+			</div>
+			
+			<div ng-show="loggedInUser()">
+				<h3>You already logged in</h3>
+			</div>
+		</div>
+	</div>
+</div>

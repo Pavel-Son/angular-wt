@@ -1,0 +1,52 @@
+<div class='row' ng-controller="ClockController" ui-view>
+	<div class="clock col-sm-12" >
+		<h1>WT</h1>
+		<hr/>
+
+		<h3>UTC: {{clock.UTC.hours}}</h3>
+		<hr/>
+
+		<div ng-init="getUserSettings()" class="cities" ng-controller="CityController">
+			
+			<div ng-repeat="city in cities | filter:userCityFilter" class="row">
+				<div class="col-xs-3">
+					<div class="panel panel-default">
+						<div class="panel-body ">
+							<div class="row">
+								<div class="col-xs-8">
+									{{city.name}} <b><span show-hours="{{getCurrentHour(city.timeZone)}}" minutes="{{clock.UTC.minutes}}" show-am-pm="true"></span></b>
+									<br/>
+									{{city.currentDate}}
+								</div>
+								<div class="col-xs-4 text-right">
+									<div class="btn btn-danger" ng-click="removeCity($index)"><span class="glyphicon glyphicon-remove"></span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- {{getHoursList(city.timeZone)}} -->
+				<!-- hours selector -->
+				<div class="col-md-9 hoursSelect">
+					<div class="btn-group">
+						<label ng-repeat="hour in getHoursList(city.timeZone) track by $index" class="btn btn-primary" ng-click="
+						setCurrentHour($index)" ng-model="currentHourSelector" btn-radio="{{$index}}"><span show-hours="{{hour}}" show-am-pm='true' show-date='true'></span></label>
+					</div>
+				</div>
+			</div>					
+
+			<!-- <button class="btn btn-default" ng-click="addCity()">Add city</button> -->
+		</div>
+		
+	</div>
+
+	<div class="col-sm-12">
+		<h4>Set time Format</h4>
+		<div class="btn-group">
+	        <label class="btn btn-primary" ng-model="hoursFormat" btn-radio="12">12hrs</label>
+	        <label class="btn btn-primary" ng-model="hoursFormat" btn-radio="24">24hrs</label>
+	    </div>
+	</div>
+
+</div>

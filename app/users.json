@@ -1,0 +1,22 @@
+{
+	"user1": {
+		"password": "pass1",
+		"email": "user1@mail.com",
+		"userSettings": {
+			"cities": [
+				"Omsk", "London"
+			],
+			"homeCity": ""
+		}
+	}, 
+	"user2": {
+		"password": "pass2",
+		"email": "user2@mail.com",
+		"userSettings": {
+			"cities": [
+				"Omsk", "Moscow", "London"
+			],
+			"homeCity": ""
+		}
+	}
+}

@@ -1,0 +1,23 @@
+[
+	{
+		"name": "Omsk",
+		"country": "Russia",
+		"timeZone": "+6",
+		"currentDate": "24.09.2015"
+	}, {
+		"name": "Moscow",
+		"country": "Russia",
+		"timeZone": "+3",
+		"currentDate": "24.09.2015"
+	}, {
+		"name": "Novosibirsk",
+		"country": "Russia",
+		"timeZone": "+6",
+		"currentDate": "24.09.2015"
+	}, {
+		"name": "London",
+		"country": "GB",
+		"timeZone": "0",
+		"currentDate": "24.09.2015"
+	}
+]

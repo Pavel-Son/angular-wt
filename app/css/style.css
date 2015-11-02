@@ -1,0 +1,15 @@
+.btn-group span.mounth,
+.btn-group span.day-part {
+	display: block;
+
+}
+.hoursSelect label {
+	min-height: 55px;
+	display: table;
+	vertical-align: middle;
+	padding: 6px 7px;
+}
+.hoursSelect label span {
+    vertical-align: middle;
+    display: table-cell;
+}

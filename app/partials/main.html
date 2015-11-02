@@ -1,0 +1,15 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav">
+			<li ng-class="{ active : (currentPage == 'home') }"><a href="/#/">Home</a></li>
+		</ul>
+		<nav class="nav navbar-nav navbar-right">
+			<li ng-hide="loggedInUser()" ng-class="{ active : (currentPage == 'login') }"><a ui-sref="login">Login</a></li>
+			<li ng-show="loggedInUser()"><a ui-sref="user">{{getLoggedInUser()}}</a></li>
+			<li ng-show="loggedInUser()"><a ng-click="logOutUser()">Logout</a></li>
+		</nav>
+	</div>
+</nav>
+<div class="ui-view-container">
+	<div class="container-fluid" ui-view></div>
+</div>
