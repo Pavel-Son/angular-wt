@@ -48,4 +48,27 @@ angular.module('wt.services', [])
 				return currentUser.userSettings;
 			}
 		}
+	})
+	.factory('userService1', function ($http) {
+		var apiUrl = "http://s.q-man.ru:3000/";
+
+		return {
+			signUpUser: function (userName, password, email) {
+				return $http({
+					method: "POST",
+					url: apiUrl + "user",
+					data: {
+						"login": userName,
+						"password": password,
+						"email": email
+					}
+				});
+			},
+			getUsers: function (userName) {
+				return $http({
+					method: "GET",
+					url: apiUrl + "users"
+				});
+			},
+		}
 	});

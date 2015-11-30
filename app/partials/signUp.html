@@ -1,0 +1,48 @@
+<div class="col-sm-12">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4>Sign Up</h4>
+			<div class="error">
+				<div class="alert alert-warning" ng-show="signUp.password !== signUp.passVerify">Passwords didn't match</div>
+			</div>
+			<div>
+				<form name="signUpForm">
+					<div class="form-group">
+						<input type="text" placeholder="username" name="username" ng-model="signUp.userName" name="userName" required class="form-control"/>
+					</div>
+					<div class="form-group">
+						<input type="password" id="pass" name="pass" ng-model="signUp.password" placeholder="password" required class="form-control"/>
+					</div>
+					<div class="form-group">
+						<input type="password" id="pass" name="passVerify" ng-model="signUp.passVerify" placeholder="password" required class="form-control"/>
+					</div>
+					<div class="form-group">
+						<input type="email" name="input" placeholder="Email" ng-model="signUp.email" required class="form-control"/>
+					</div>
+
+					<button 
+						ng-disabled="(!signUpForm.input.$valid) || (!signUp.password.length && !signUp.passVerify.length) || (!signUp.password !== !signUp.passVerify)"
+						class="btn btn-success"
+						ng-click="signUpUser()">Sign Up</button>
+				</form>
+				
+				<hr/>
+				<button class="btn btn-default" ng-click="getUsers()">get users</button>
+				<pre ng-show="users">{{users | json}}</pre>
+				
+				<hr/>
+				<input type="text" ng-model="searchUser" class="form-control" />
+				<pre ng-show="searchedUser">{{searchedUser | json}}</pre>
+				<hr/>
+				
+				<div ng-show="!signUpForm.input.$valid">
+					errors!
+				</div>
+			</div>
+			
+			<div ng-show="loggedInUser()">
+				<h3>You already logged in</h3>
+			</div>
+		</div>
+	</div>
+</div>

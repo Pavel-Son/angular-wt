@@ -75,7 +75,7 @@ app.controller('CityController', function ($scope, citiesService) {
 	}
 });
 
-app.controller('UserController', function ($scope, $cookies, $state, userService, $http) {
+app.controller('UserController', function ($scope, $cookies, $state, userService, $http, userService1) {
 	$scope.login = {};
 	$scope.userSettings = {};
 	// $scope.userStatus = {};
@@ -130,10 +130,6 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 		}
 	}
 
-	$scope.logOutUser = function () {
-		// TODO: remove user from cookies
-		$cookies.put('loggedInUser', '');
-	}
 
 	$scope.togglePassVisibility = function () {
 		var type = (jQuery('#pass').attr('type') == 'password')? 'text' : 'password';
@@ -147,9 +143,40 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 		jQuery('#pass').attr('type', type);
 	}
 
+	$scope.getUsers = function () {
+		userService1.getUsers().then(function(request) {
+			$scope.status = request.status;
+			$scope.users = request.data;
+		});
+	}
+
+	$scope.$watch('searchUser', function(newVal, oldVal, scope) {
+		if (scope.users) {
+			// console.log('asdf');
+			scope.searchedUser = scope.users.data.filter(function(user) { 
+				return user.login == newVal;
+			});
+		}
+	});
+
+
+
+	$scope.signUpUser = function () {
+		userService1.signUpUser(
+			$scope.signUp.userName,
+			$scope.signUp.password,
+			$scope.signUp.email
+		).then(function(data) {
+			console.log(data);
+		});
+	}
+
+	$scope.logOutUser = function () {
+		// TODO: remove user from cookies
+		$cookies.put('loggedInUser', '');
+	}
+
 });
-
-
 
 app.filter('customTime', function () {
 	return function (input) {
@@ -179,6 +206,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
 			parent: 'main',
 			templateUrl: "partials/login.html",
 			controller: 'UserController'
+		})
+		.state('signUp', {
+			url: "/signup",
+			parent: 'main',
+			templateUrl: 'partials/signUp.html',
+			controller: "UserController"
 		})
 		.state('user', {
 			url: '/user',
