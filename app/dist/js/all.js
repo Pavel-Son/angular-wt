@@ -167,7 +167,9 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 			$scope.signUp.password,
 			$scope.signUp.email
 		).then(function(data) {
-			console.log(data);
+			if (data.status == 201) {
+				
+			}
 		});
 	}
 
@@ -391,6 +393,9 @@ angular.module('wt.services', [])
 					url: apiUrl + "users"
 				});
 			},
+			verifyUser: function (users, userName, pass) {
+
+			}
 		}
 	});
 

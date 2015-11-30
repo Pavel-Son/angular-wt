@@ -167,7 +167,9 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 			$scope.signUp.password,
 			$scope.signUp.email
 		).then(function(data) {
-			console.log(data);
+			if (data.status == 201) {
+				
+			}
 		});
 	}
 

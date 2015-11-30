@@ -70,5 +70,8 @@ angular.module('wt.services', [])
 					url: apiUrl + "users"
 				});
 			},
+			verifyUser: function (users, userName, pass) {
+
+			}
 		}
 	});
