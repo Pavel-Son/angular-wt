@@ -78,46 +78,20 @@ app.controller('CityController', function ($scope, citiesService) {
 app.controller('UserController', function ($scope, $cookies, $state, userService, $http, userService1) {
 	$scope.login = {};
 	$scope.userSettings = {};
-	// $scope.userStatus = {};
-	// $scope.test = 
-	
-	$scope.loggedInUser = function () {
-		return $cookies.get('loggedInUser');
-	}
-	
+
 	$scope.getLoggedInUser = function () {
 		return $cookies.get('loggedInUser');
 	}
 
 	$scope.getUserSettings = function () {
-		if ($scope.getLoggedInUser()) {
-			userService.getUsers().then(function(response) {
-				var userName = $scope.getLoggedInUser();			
-				$scope.userSettings = userService.getUserSettings(response.data, userName);
-			});
-		}
+		// if ($scope.getLoggedInUser()) {
+		// 	userService.getUsers().then(function(response) {
+		// 		var userName = $scope.getLoggedInUser();			
+		// 		$scope.userSettings = userService.getUserSettings(response.data, userName);
+		// 	});
+		// }
 	}
 
-	$scope.logInUser = function (userName, pass) {
-
-		// var userName = $scope.login.userName,
-		// 		password = $scope.login.password;
-
-		// userService.getUsers().then(function(response) {
-	 // 		$scope.userStatus = userService.verifyUser(response.data, userName, password);
-		// }).then(function() {
-		// 	//verifyed succesfully
-		// 	if ($scope.userStatus.userExist == true &&
-		// 		$scope.userStatus.passwordMatch == true ) {
-				
-		// 		// put user in cookies
-		// 		// and redirect to main page
-		// 		$cookies.put('loggedInUser', userName);
-		// 		$state.go('main');
-		// 	}
-		// });
-				
-	}
 
 	$scope.userCityFilter = function (item) {
 		if ($scope.userSettings.cities) {
@@ -161,7 +135,34 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 		}
 	});
 
+	$scope.logInUser = function (userName, password) {
 
+		var user = userService1.getUser($scope.users, userName);
+		
+		// succesfully login
+		if (user.password == password) {
+			$cookies.put('loggedInUser', userName);
+			$state.go('main');
+		}
+
+		// var userName = $scope.login.userName,
+		// 		password = $scope.login.password;
+
+		// userService.getUsers().then(function(response) {
+		// 		$scope.userStatus = userService.verifyUser(response.data, userName, password);
+		// }).then(function() {
+		// 	//verifyed succesfully
+		// 	if ($scope.userStatus.userExist == true &&
+		// 		$scope.userStatus.passwordMatch == true ) {
+				
+		// 		// put user in cookies
+		// 		// and redirect to main page
+		// 		$cookies.put('loggedInUser', userName);
+		// 		$state.go('main');
+		// 	}
+		// });
+				
+	}
 
 	$scope.signUpUser = function () {
 		userService1.signUpUser(
@@ -170,7 +171,7 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 			$scope.signUp.email
 		).then(function(data) {
 			if (data.status == 201) {
-				$scope.logInUser()
+				$scope.logInUser($scope.signUp.userName, $scope.signUp.password);
 			}
 		});
 	}
