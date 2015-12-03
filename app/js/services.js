@@ -64,14 +64,16 @@ angular.module('wt.services', [])
 					}
 				});
 			},
-			getUsers: function (userName) {
+			getUsers: function () {
 				return $http({
 					method: "GET",
 					url: apiUrl + "users"
 				});
 			},
-			verifyUser: function (users, userName, pass) {
-
+			getUser: function (users, userName) {
+				return _.find(users, function(user) {
+					return user.login == userName
+				});
 			}
 		}
 	});

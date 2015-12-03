@@ -98,23 +98,24 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 		}
 	}
 
-	$scope.logInUser = function () {
-		var userName = $scope.login.userName,
-				password = $scope.login.password;
+	$scope.logInUser = function (userName, pass) {
 
-		userService.getUsers().then(function(response) {
-	 		$scope.userStatus = userService.verifyUser(response.data, userName, password);
-		}).then(function() {
-			//verifyed succesfully
-			if ($scope.userStatus.userExist == true &&
-				$scope.userStatus.passwordMatch == true ) {
+		// var userName = $scope.login.userName,
+		// 		password = $scope.login.password;
+
+		// userService.getUsers().then(function(response) {
+	 // 		$scope.userStatus = userService.verifyUser(response.data, userName, password);
+		// }).then(function() {
+		// 	//verifyed succesfully
+		// 	if ($scope.userStatus.userExist == true &&
+		// 		$scope.userStatus.passwordMatch == true ) {
 				
-				// put user in cookies
-				// and redirect to main page
-				$cookies.put('loggedInUser', userName);
-				$state.go('main');
-			}
-		});
+		// 		// put user in cookies
+		// 		// and redirect to main page
+		// 		$cookies.put('loggedInUser', userName);
+		// 		$state.go('main');
+		// 	}
+		// });
 				
 	}
 
@@ -152,10 +153,11 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 
 	$scope.$watch('searchUser', function(newVal, oldVal, scope) {
 		if (scope.users) {
+			scope.searchedUser = userService1.getUser($scope.users, newVal);
 			// console.log('asdf');
-			scope.searchedUser = scope.users.data.filter(function(user) { 
-				return user.login == newVal;
-			});
+			// scope.searchedUser = scope.users.filter(function(user) { 
+			// 	return user.login == newVal;
+			// });
 		}
 	});
 
@@ -168,7 +170,7 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 			$scope.signUp.email
 		).then(function(data) {
 			if (data.status == 201) {
-				
+				$scope.logInUser()
 			}
 		});
 	}
@@ -387,14 +389,16 @@ angular.module('wt.services', [])
 					}
 				});
 			},
-			getUsers: function (userName) {
+			getUsers: function () {
 				return $http({
 					method: "GET",
 					url: apiUrl + "users"
 				});
 			},
-			verifyUser: function (users, userName, pass) {
-
+			getUser: function (users, userName) {
+				return _.find(users, function(user) {
+					return user.login == userName
+				});
 			}
 		}
 	});
