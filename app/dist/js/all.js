@@ -75,21 +75,12 @@ app.controller('CityController', function ($scope, citiesService) {
 	}
 });
 
-app.controller('UserController', function ($scope, $cookies, $state, userService, $http, userService1) {
+app.controller('UserController', function ($scope, $cookies, $state, $http, userService) {
 	$scope.login = {};
 	$scope.userSettings = {};
 
 	$scope.getLoggedInUser = function () {
 		return $cookies.get('loggedInUser');
-	}
-
-	$scope.getUserSettings = function () {
-		// if ($scope.getLoggedInUser()) {
-		// 	userService.getUsers().then(function(response) {
-		// 		var userName = $scope.getLoggedInUser();			
-		// 		$scope.userSettings = userService.getUserSettings(response.data, userName);
-		// 	});
-		// }
 	}
 
 
@@ -119,7 +110,7 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 	}
 
 	$scope.getUsers = function () {
-		userService1.getUsers().then(function(request) {
+		userService.getUsers().then(function(request) {
 			$scope.status = request.status;
 			$scope.users = request.data;
 		});
@@ -127,45 +118,24 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 
 	$scope.$watch('searchUser', function(newVal, oldVal, scope) {
 		if (scope.users) {
-			scope.searchedUser = userService1.getUser($scope.users, newVal);
-			// console.log('asdf');
-			// scope.searchedUser = scope.users.filter(function(user) { 
-			// 	return user.login == newVal;
-			// });
+			scope.searchedUser = userService.getUser($scope.users, newVal);
+
 		}
 	});
 
 	$scope.logInUser = function (userName, password) {
 
-		var user = userService1.getUser($scope.users, userName);
+		var user = userService.getUser($scope.users, userName);
 		
 		// succesfully login
 		if (user.password == password) {
 			$cookies.put('loggedInUser', userName);
 			$state.go('main');
 		}
-
-		// var userName = $scope.login.userName,
-		// 		password = $scope.login.password;
-
-		// userService.getUsers().then(function(response) {
-		// 		$scope.userStatus = userService.verifyUser(response.data, userName, password);
-		// }).then(function() {
-		// 	//verifyed succesfully
-		// 	if ($scope.userStatus.userExist == true &&
-		// 		$scope.userStatus.passwordMatch == true ) {
-				
-		// 		// put user in cookies
-		// 		// and redirect to main page
-		// 		$cookies.put('loggedInUser', userName);
-		// 		$state.go('main');
-		// 	}
-		// });
-				
 	}
 
 	$scope.signUpUser = function () {
-		userService1.signUpUser(
+		userService.signUpUser(
 			$scope.signUp.userName,
 			$scope.signUp.password,
 			$scope.signUp.email
@@ -178,7 +148,7 @@ app.controller('UserController', function ($scope, $cookies, $state, userService
 
 	$scope.logOutUser = function () {
 		// TODO: remove user from cookies
-		$cookies.put('loggedInUser', '');
+		$cookies.put('loggedInUser', '');	
 	}
 
 });
@@ -342,40 +312,6 @@ angular.module('wt.services', [])
 		}
 	})
 	.factory('userService', function ($http) {
-		return {
-			getUsers: function () {
-				var requestParam = {
-					method: "POST",
-					url: "../../users.json"
-				};
-
-				//return promise
-				return $http(requestParam);
-			},
-
-			verifyUser: function (users, userName, pass) {
-				var currentUser = users[userName],
-					userStatus = {
-						"userExist": false,
-						"passwordMatch": false
-					};
-
-				//userExist
-				if (currentUser !== null) {
-					userStatus.userExist = true;
-					userStatus.passwordMatch = (currentUser.password == pass) ? true : false;
-				}
-
-				return userStatus;
-			},
-
-			getUserSettings: function (users, userName) {
-				var currentUser = users[userName];
-				return currentUser.userSettings;
-			}
-		}
-	})
-	.factory('userService1', function ($http) {
 		var apiUrl = "http://s.q-man.ru:3000/";
 
 		return {

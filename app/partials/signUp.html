@@ -25,18 +25,6 @@
 						class="btn btn-success"
 						ng-click="signUpUser()">Sign Up</button>
 				</form>
-				
-				<hr/>
-				<pre ng-show="users">{{users | json}}</pre>
-				
-				<hr/>
-				<input type="text" ng-model="searchUser" class="form-control" />
-				<pre ng-show="searchedUser">{{searchedUser | json}}</pre>
-				<hr/>
-				
-				<div ng-show="!signUpForm.input.$valid">
-					errors!
-				</div>
 			</div>
 			
 			<div ng-show="loggedInUser()">

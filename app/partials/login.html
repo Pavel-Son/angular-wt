@@ -23,7 +23,7 @@
 						<input type="password" id="pass" placeholder="password" ng-model="login.password" name="password" required class="form-control"/>
 					</div>
 				</div>
-				<button class="btn btn-success" ng-click="logInUser()">Login</button>
+				<button class="btn btn-success" ng-click="logInUser(login.userName, login.password)">Login</button>
 				<span>or</span>
 				<button class="btn btn-info" ui-sref="signUp">Sign Up</button>
 				<!-- </form> -->

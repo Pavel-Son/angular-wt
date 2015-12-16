@@ -4,6 +4,7 @@
 			<li ng-class="{ active : (currentPage == 'home') }"><a href="/#/">Home</a></li>
 		</ul>
 		<nav class="nav navbar-nav navbar-right">
+			<li ng-hide="getLoggedInUser()" ng-class="{ active : (currentPage == 'signup') }"><a ui-sref="signUp">Sign Up</a></li>
 			<li ng-hide="getLoggedInUser()" ng-class="{ active : (currentPage == 'login') }"><a ui-sref="login">Login</a></li>
 			<li ng-show="getLoggedInUser()"><a ui-sref="user">{{getLoggedInUser()}}</a></li>
 			<li ng-show="getLoggedInUser()"><a ng-click="logOutUser()">Logout</a></li>
