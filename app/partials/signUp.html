@@ -3,8 +3,10 @@
 		<div class="col-sm-6">
 			<h4>Sign Up</h4>
 			<div class="error">
-				<div class="alert alert-warning" ng-show="signUp.password !== signUp.passVerify">Passwords didn't match</div>
+				<div class="alert alert-warning" ng-show="((signUp.password !== signUp.passVerify) && (!!signUp.passVerify))">Passwords didn't match</div>
 			</div>
+
+			
 			<div>
 				<form name="signUpForm">
 					<div class="form-group">
@@ -26,7 +28,9 @@
 						ng-click="signUpUser()">Sign Up</button>
 				</form>
 			</div>
-			
+			<pre>
+				{{users | json}}
+			</pre>
 			<div ng-show="loggedInUser()">
 				<h3>You already logged in</h3>
 			</div>

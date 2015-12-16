@@ -126,7 +126,7 @@ app.controller('UserController', function ($scope, $cookies, $state, $http, user
 	$scope.logInUser = function (userName, password) {
 
 		var user = userService.getUser($scope.users, userName);
-		
+		console.log(user.password == password);
 		// succesfully login
 		if (user.password == password) {
 			$cookies.put('loggedInUser', userName);
