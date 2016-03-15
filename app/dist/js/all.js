@@ -195,41 +195,33 @@ app.filter('customTime', function () {
 	}
 });
 
-app.run(function($http, $rootScope) {
-	$http({
-		method: "GET",
-		url: '/'
-	}).then(function(res) {
-		if (res.status == 200) {
-			$rootScope.apiAvailable = 'true';
-		}
-	});
-});
 
 app.provider("httpRequest", function () {
 	var response;
 	return {
 		sendRequest: function () {
-			var xhr = new XMLHttpRequest();
-			
-			xhr.open('GET', '/', false)
-				 .send();
 
-			if (xhr.status != 200) {
-			  alert("ERROR!");
-			} else {
-			  response = xhr.responseText;
+			function handler() {
+				console.log(this);
+			  if(this.status == 200 &&
+			    this.response != null) {
+
+			  	response = this.response;
+			  	console.log(response);
+			  } else {
+			    console.log('http response error');
+			  }
 			}
 
-			console.log(response);
-		},
-		logData: function () {
-			console.log(response);
+			var client = new XMLHttpRequest();
+			client.onload = handler;
+			client.open("GET", "/");
+			client.send();
 		},
 		$get: function () {
-			 return {
-			 	data: response
-			 }
+			return {
+			 	data: responses
+			}
 		}
 	}
 	
@@ -239,39 +231,42 @@ app.config([
 	'$stateProvider', '$urlRouterProvider', 'httpRequestProvider',
 	function($stateProvider, $urlRouterProvider, httpRequestProvider) {
 		httpRequestProvider.sendRequest();
+		
 
-		$urlRouterProvider.when('', '/');
 
-			$stateProvider
-				.state('main', {
-					url: "",
-					templateUrl: "partials/main.html",
-					controller: 'UserController'
-				})
-				.state('clock', {
-					url: "/",
-					parent: "main",
-					templateUrl: "partials/clocks.html",
-					controller: "UserController"
-				})
-				.state('login', {
-					url: "/login",
-					parent: 'main',
-					templateUrl: "partials/login.html",
-					controller: 'UserController'
-				})
-				.state('signUp', {
-					url: "/signup",
-					parent: 'main',
-					templateUrl: 'partials/signUp.html',
-					controller: "UserController"
-				})
-				.state('user', {
-					url: '/user',
-					parent: 'main',
-					templateUrl: "partials/user.html",
-					controller: 'UserController'
-				});
+			$urlRouterProvider.when('', '/');
+
+				$stateProvider
+					.state('main', {
+						url: "",
+						templateUrl: "partials/main.html",
+						controller: 'UserController'
+					})
+					.state('clock', {
+						url: "/",
+						parent: "main",
+						templateUrl: "partials/clocks.html",
+						controller: "UserController"
+					})
+					.state('login', {
+						url: "/login",
+						parent: 'main',
+						templateUrl: "partials/login.html",
+						controller: 'UserController'
+					})
+					.state('signUp', {
+						url: "/signup",
+						parent: 'main',
+						templateUrl: 'partials/signUp.html',
+						controller: "UserController"
+					})
+					.state('user', {
+						url: '/user',
+						parent: 'main',
+						templateUrl: "partials/user.html",
+						controller: 'UserController'
+					});
+		// });
 }]);
 
 
