@@ -79,11 +79,6 @@ app.controller('UserController', function ($scope, $cookies, $state, $http, user
 	$scope.login = {};
 	$scope.userSettings = {};
 
-	$scope.getLoggedInUser = function () {
-		return $cookies.get('loggedInUser');
-	}
-
-
 	$scope.userCityFilter = function (item) {
 		if ($scope.userSettings.cities) {
 			for (var i = 0; i < $scope.userSettings.cities.length; i++) {
@@ -109,6 +104,16 @@ app.controller('UserController', function ($scope, $cookies, $state, $http, user
 		jQuery('#pass').attr('type', type);
 	}
 
+
+
+	$scope.getUserList = function () {
+		var token = $cookies.get('token');
+
+		userService.getUserList(token).then(function(response) {
+			$scope.user = response.data;
+		});
+	}
+
 	$scope.getUsers = function () {
 		userService.getUsers().then(function(request) {
 			$scope.status = request.status;
@@ -116,22 +121,53 @@ app.controller('UserController', function ($scope, $cookies, $state, $http, user
 		});
 	}
 
-	$scope.$watch('searchUser', function(newVal, oldVal, scope) {
-		if (scope.users) {
-			scope.searchedUser = userService.getUser($scope.users, newVal);
-
-		}
-	});
+	$scope.getLoggedInUser = function () {
+		return $cookies.get('loggedInUser');
+	}
+	
+	$scope.token = $cookies.get('token');
+	// $scope.loggedInUser  = $cookies.get('loggedInUser');
+	// $scope.loggedInUser_login = $cookies.get('loggedInUser_login');
+	// $scope.loggedInUser_id = $cookies.get('loggedInUser_id');
+	// $scope.loggedInUser_email = $cookies.get('loggedInUser_email');
+	
+	$cookies.remove('loggedInUser.email');
+	$cookies.remove('loggedInUser.login');
+	$cookies.remove('loggedInUser.id');
+	$cookies.remove('loggedInUser_email');
+	$cookies.remove('loggedInUser_login');
+	$cookies.remove('loggedInUser_id');
 
 	$scope.logInUser = function (userName, password) {
+		userService.logInUser(userName, password).then(function(response) {
+			if (response.status = 200) {
+				$cookies.put('token', response.data.token);
+				
+				$cookies.put('loggedInUser', response.data.user.login);
+				$cookies.put('loggedInUser_login', response.data.user.login);
+				$cookies.put('loggedInUser_id', response.data.user.id);
+				$cookies.put('loggedInUser_email', response.data.user.email);
+				$state.go('main');
+			}
+		});
+	}
 
-		var user = userService.getUser($scope.users, userName);
-		console.log(user.password == password);
-		// succesfully login
-		if (user.password == password) {
-			$cookies.put('loggedInUser', userName);
-			$state.go('main');
-		}
+	$scope.getUserData = function () {
+		var id = parseInt($scope.loggedInUser_id);
+		userService.getUserData(id, $scope.token).then(function (response) {
+			console.log(response.data);
+		});	
+	}
+
+	$scope.updateUser = function () {
+		// console.log($scope.token);
+		// var user = {
+		// 	login: $scope.newLogin || $scope.loggedInUser_login,
+		// 	email: $scope.newEmail || $scope.loggedInUser_email,
+		// 	password: 
+		// }
+
+		// userService.updateUser($scope.token).then
 	}
 
 	$scope.signUpUser = function () {
@@ -147,8 +183,8 @@ app.controller('UserController', function ($scope, $cookies, $state, $http, user
 	}
 
 	$scope.logOutUser = function () {
-		// TODO: remove user from cookies
 		$cookies.put('loggedInUser', '');	
+		$state.go('main');
 	}
 
 });
@@ -159,42 +195,85 @@ app.filter('customTime', function () {
 	}
 });
 
-
-app.config(function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.when('', '/');
-	// $urlRouterProvider.otherwise("/#/");
-
-	$stateProvider
-		.state('main', {
-			url: "",
-			templateUrl: "partials/main.html",
-			controller: 'UserController'
-		})
-		.state('clock', {
-			url: "/",
-			parent: "main",
-			templateUrl: "partials/clocks.html",
-			controller: "UserController"
-		})
-		.state('login', {
-			url: "/login",
-			parent: 'main',
-			templateUrl: "partials/login.html",
-			controller: 'UserController'
-		})
-		.state('signUp', {
-			url: "/signup",
-			parent: 'main',
-			templateUrl: 'partials/signUp.html',
-			controller: "UserController"
-		})
-		.state('user', {
-			url: '/user',
-			parent: 'main',
-			templateUrl: "partials/user.html",
-			controller: 'UserController'
-		});
+app.run(function($http, $rootScope) {
+	$http({
+		method: "GET",
+		url: '/'
+	}).then(function(res) {
+		if (res.status == 200) {
+			$rootScope.apiAvailable = 'true';
+		}
+	});
 });
+
+app.provider("httpRequest", function () {
+	var response;
+	return {
+		sendRequest: function () {
+			var xhr = new XMLHttpRequest();
+			
+			xhr.open('GET', '/', false)
+				 .send();
+
+			if (xhr.status != 200) {
+			  alert("ERROR!");
+			} else {
+			  response = xhr.responseText;
+			}
+
+			console.log(response);
+		},
+		logData: function () {
+			console.log(response);
+		},
+		$get: function () {
+			 return {
+			 	data: response
+			 }
+		}
+	}
+	
+});
+
+app.config([
+	'$stateProvider', '$urlRouterProvider', 'httpRequestProvider',
+	function($stateProvider, $urlRouterProvider, httpRequestProvider) {
+		httpRequestProvider.sendRequest();
+
+		$urlRouterProvider.when('', '/');
+
+			$stateProvider
+				.state('main', {
+					url: "",
+					templateUrl: "partials/main.html",
+					controller: 'UserController'
+				})
+				.state('clock', {
+					url: "/",
+					parent: "main",
+					templateUrl: "partials/clocks.html",
+					controller: "UserController"
+				})
+				.state('login', {
+					url: "/login",
+					parent: 'main',
+					templateUrl: "partials/login.html",
+					controller: 'UserController'
+				})
+				.state('signUp', {
+					url: "/signup",
+					parent: 'main',
+					templateUrl: 'partials/signUp.html',
+					controller: "UserController"
+				})
+				.state('user', {
+					url: '/user',
+					parent: 'main',
+					templateUrl: "partials/user.html",
+					controller: 'UserController'
+				});
+}]);
+
 
 
 
@@ -335,6 +414,42 @@ angular.module('wt.services', [])
 			getUser: function (users, userName) {
 				return _.find(users, function(user) {
 					return user.login == userName
+				});
+			},
+			getUserData: function (id, token) {
+				return $http({
+					method: "GET",
+					url: apiUrl + 'auth/user/' + id,
+					headers: {
+						Authorization: token
+					}
+				})
+			},
+			logInUser: function (userName, password) {
+				var userData = {
+					login: userName,
+					password: password
+				};
+
+				return $http.post(apiUrl + "user/login", userData);
+			},
+			getUserList: function (token) {
+				return $http({
+					method: "GET",
+					url: apiUrl + 'auth/users',
+					headers: {
+						Authorization: token
+					}
+				});
+			},
+			updateUser: function (user, token) {
+				return $http({
+					method: 'PUT',
+					url: apiUrl + "/user/" + user.id,
+					data: user,
+					headers: {
+						Authorization: token
+					}
 				});
 			}
 		}

@@ -40,6 +40,42 @@ angular.module('wt.services', [])
 				return _.find(users, function(user) {
 					return user.login == userName
 				});
+			},
+			getUserData: function (id, token) {
+				return $http({
+					method: "GET",
+					url: apiUrl + 'auth/user/' + id,
+					headers: {
+						Authorization: token
+					}
+				})
+			},
+			logInUser: function (userName, password) {
+				var userData = {
+					login: userName,
+					password: password
+				};
+
+				return $http.post(apiUrl + "user/login", userData);
+			},
+			getUserList: function (token) {
+				return $http({
+					method: "GET",
+					url: apiUrl + 'auth/users',
+					headers: {
+						Authorization: token
+					}
+				});
+			},
+			updateUser: function (user, token) {
+				return $http({
+					method: 'PUT',
+					url: apiUrl + "/user/" + user.id,
+					data: user,
+					headers: {
+						Authorization: token
+					}
+				});
 			}
 		}
 	});

@@ -12,7 +12,7 @@
 			</div>
 			<hr>
 			
-			<div ng-hide="loggedInUser()">
+			<div ng-hide="loggedInUser">
 				<!-- <form action="" class="form" method="POST"> -->
 				<div class="form-group">
 					<input type="text" placeholder="username" ng-model="login.userName" name="userName" required class="form-control"/>
@@ -29,7 +29,7 @@
 				<!-- </form> -->
 			</div>
 			
-			<div ng-show="loggedInUser()">
+			<div ng-show="loggedInUser">
 				<h3>You already logged in</h3>
 			</div>
 		</div>
